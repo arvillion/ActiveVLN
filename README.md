@@ -149,8 +149,8 @@ The training code and configuration are designed to run on 4x NVIDIA L40s GPUs (
 Step 1: **Prepare the Post-SFT Model**: 
 RL training builds upon an SFT checkpoint. You can either download our pre-trained checkpoints or fine-tune one yourself. We provide two checkpoints for RL training on R2R and RxR, respectively.
 
-- [Qwen2.5-VL-3B_sft_r2r_envdrop_multiturn](https://huggingface.co/Arvil/Qwen2.5-VL-3B_sft_r2r_envdrop_multiturn): Fine-tuned on the R2R and R2R-EnvDrop datasets. Use this as the base model for RL training on R2R.
-- [Qwen2.5-VL-3B_sft_r2r_envdrop_rxr_multiturn](https://huggingface.co/Arvil/Qwen2.5-VL-3B_sft_r2r_envdrop_rxr_multiturn): Fine-tuned on the R2R, R2R-EnvDrop, and RxR datasets. Use this as the base model for RL training on RxR.
+- [`Qwen2.5-VL-3B_sft_r2r_envdrop_multiturn`](https://huggingface.co/Arvil/Qwen2.5-VL-3B_sft_r2r_envdrop_multiturn): Fine-tuned on the R2R and R2R-EnvDrop datasets. Use this as the base model for RL training on R2R.
+- [`Qwen2.5-VL-3B_sft_r2r_envdrop_rxr_multiturn`](https://huggingface.co/Arvil/Qwen2.5-VL-3B_sft_r2r_envdrop_rxr_multiturn): Fine-tuned on the R2R, R2R-EnvDrop, and RxR datasets. Use this as the base model for RL training on RxR.
 
 Step 2: **Start Training**: Run one of the following scripts to begin training on your chosen dataset:
 
@@ -166,6 +166,8 @@ bash example/vlnce/train_rxr.sh
 We provide several checkpoints:
 - [`Qwen2.5-VL-3B_sft_r2r_envdrop_multiturn`](https://huggingface.co/Arvil/Qwen2.5-VL-3B_sft_r2r_envdrop_multiturn): Fine-tuned on R2R and R2R-EnvDrop. This is the base model for RL training on R2R (achieves SR ~38.5).
 - [`Qwen2.5-VL-3B_rl_r2r_4000`](https://huggingface.co/Arvil/Qwen2.5-VL-3B_rl_r2r_4000): The result of RL training on `data/r2r_4000_train.parquet` (step 350), built upon the SFT checkpoint above.
+- [`Qwen2.5-VL-3B_sft_r2r_envdrop_rxr_multiturn`](https://huggingface.co/Arvil/Qwen2.5-VL-3B_sft_r2r_envdrop_rxr_multiturn): Fine-tuned on the R2R, R2R-EnvDrop, and RxR datasets. This is the base model for RL training on RxR (achieves SR ~41.0).
+- [`Qwen2.5-VL-3B_rl_rxr_4000_step350`](https://huggingface.co/Arvil/Qwen2.5-VL-3B_rl_rxr_4000_step350): The result of RL training on `data/rxr_4000_train.parquet` (step 350), built upon the SFT checkpoint above.
 
 
 
