@@ -23,6 +23,14 @@ ActiveVLN follows a two-stage process:
 
 ![Overview](docs/overview.png)
 
+## 📝 TODO List
+
+- ✅ Submit the arXiv paper (Sep. 12, 2025)
+- ✅ Publish model checkpoints
+- ⏳ Release evaluation scripts
+- ⏳ Release training code and data
+- ⏳ Release environment server code
+
 ##  Quick Start
 ActiveVLN separates the training code from the VLN-CE environment code to improve efficiency and resource usage. The training machine and the VLN-CE environment server communicate via HTTP. Therefore, you'll need to set up two separate environments: one for running the training code and another for the environment server. If resources (memory, GPU memory) allow, you can run both parts on the same machine.
 
