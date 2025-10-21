@@ -742,7 +742,7 @@ class RayPPOTrainer:
                 gt_act_seq = extra_info['gt_actions']
                 
                 step_budget_list.append(self.config.actor_rollout_ref.rollout.agent.max_step_budget)
-                turn_budget_list.append(self.config.actor_rollout_ref.rollout.agent.max_turns)
+                turn_budget_list.append(self.config.actor_rollout_ref.rollout.agent.max_turn_budget)
                 gt_actions_seqs.append([])
                 full_gt_action_seqs.append(gt_act_seq)
             
@@ -1291,7 +1291,7 @@ class RayPPOTrainer:
 
                     gt_actions_seqs.append(gt_act_seq[:num_gt_actions])
                     full_gt_action_seqs.append(gt_act_seq)
-                    turn_budget = self.config.actor_rollout_ref.rollout.agent.max_turns - math.ceil(len(gt_act_seq[:num_gt_actions]) / self.config.actor_rollout_ref.rollout.agent.max_actions_per_step)
+                    turn_budget = self.config.actor_rollout_ref.rollout.agent.max_turn_budget - math.ceil(len(gt_act_seq[:num_gt_actions]) / self.config.actor_rollout_ref.rollout.agent.max_actions_per_step)
                     assert turn_budget > 0
                     turn_budget_list.append(turn_budget) 
                     print(f"step {self.global_steps}/{self.total_training_steps}, {num_actions=}, {num_gt_actions=}, {num_dropped_actions=}, {step_budget=}, {turn_budget=}")
@@ -1590,7 +1590,7 @@ class RayPPOTrainer:
                         for info in info_list:
                             is_fallback = info.get("is_fallback", False)
                             is_dynamic_sampling = info.get("is_dynamic_sampling", False)  
-                            caption = f"{info['data_source']}_{info['episode_id']} [{'OK' if info['success'] else 'FAIL'}]"
+                            caption = f"{info['data_source']}_{info['episode_id']} [{'OK' if info['task_success'] else 'FAIL'}]"
                             if is_fallback:
                                 caption += " [FB]"
                             if is_dynamic_sampling:

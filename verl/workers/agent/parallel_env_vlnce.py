@@ -188,7 +188,7 @@ def agent_rollout_loop(config, vllm_engine, vllm_inputs, prompts, multi_modal_in
     
     pg = vllm_ps.get_tp_group()
     max_total_length = config.prompt_length + config.response_length
-    
+
     # handle gt actions
     for idx, obs in enumerate(observations):
         assert 'prompt_token_ids_vllm' in obs.keys() and 'prompt_token_ids_model' in obs.keys()
@@ -232,7 +232,7 @@ def agent_rollout_loop(config, vllm_engine, vllm_inputs, prompts, multi_modal_in
         if running_states[idx].shape[-1] >= max_total_length or len(vllm_input_list[idx]['prompt_token_ids']) >= max_total_length:
             assert False
    
-    for step in range(config.agent.max_turns + 1):
+    for step in range(config.agent.max_turn_budget + 1):
         print(f' [Trajectory Rollout] turn={step}, bz={batch_size}, n={sampling_params.n}, num_active={sum(active_mask)}')
         if sum(active_mask) == 0:
             break
@@ -422,7 +422,7 @@ def agent_rollout_loop(config, vllm_engine, vllm_inputs, prompts, multi_modal_in
                 if ds_running_states[idx].shape[-1] >= max_total_length or len(ds_vllm_input_list[idx]['prompt_token_ids']) >= max_total_length:
                     assert False
                     
-            for step in range(config.agent.max_turns + 1):
+            for step in range(config.agent.max_turn_budget + 1):
                 print(f' [Trajectory Rollout (Dynamic Sampling #{n_attempts})] turn={step}, bz={len(groups_need_resample)}, n={sampling_params.n}, num_active={sum(ds_active_mask)}')
                 if sum(ds_active_mask) == 0:
                     break
@@ -578,9 +578,9 @@ def agent_rollout_loop(config, vllm_engine, vllm_inputs, prompts, multi_modal_in
                 fb_actions = full_gt_actions[n_history_actions:]
                 fb_actions_list.append(fb_actions)
                 assert len(fb_actions) >= 1
-        
+
             max_total_length = config.prompt_length + config.response_length
-        
+
             # handle gt actions
             for idx, obs in enumerate(fb_observations):
                 assert 'prompt_token_ids_model' in obs.keys()
@@ -614,9 +614,9 @@ def agent_rollout_loop(config, vllm_engine, vllm_inputs, prompts, multi_modal_in
             action_sep = config.agent.action_sep
             
             fb_max_turns = math.ceil(max(len(fb_actions) for fb_actions in fb_actions_list) / max_actions_per_step)
-            assert fb_max_turns <= config.agent.max_turns
+            assert fb_max_turns <= config.agent.max_turn_budget
             
-            for step in range(config.agent.max_turns + 1):
+            for step in range(config.agent.max_turn_budget + 1):
                 print(f' [Trajectory Rollout (Fallback)] turn={step}, bz={len(groups_need_fallback)}, n={1}, num_active={sum(fb_active_mask)}')
 
                 if sum(fb_active_mask) == 0:

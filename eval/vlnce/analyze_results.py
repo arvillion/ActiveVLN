@@ -178,6 +178,7 @@ if __name__ == "__main__":
     print(f"Analyzing results in {args.path}")
 
     jsons = os.listdir(os.path.join(args.path, 'log'))
+    print(f"Found {len(jsons)} json files.")
     succ = 0
     spl = 0
     distance_to_goal = 0
