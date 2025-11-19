@@ -7,7 +7,7 @@ export OPENAI_API_KEY="EMPTY"
 export OPENAI_API_BASE="http://127.0.0.1:8003/v1"
 export PYTHONPATH=$PYTHONPATH:"$(pwd)/vlnce_server"
 
-CUDA_VISIBLE_DEVICES=1 python3 eval/vlnce/eval_vlnce.py \
+python3 eval/vlnce/eval_vlnce.py \
     --exp-config $CONFIG_PATH \
     --split-num $CHUNKS \
     --result-path $SAVE_PATH
