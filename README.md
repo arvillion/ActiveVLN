@@ -27,9 +27,9 @@ ActiveVLN follows a two-stage process:
 
 - ✅ Submit the arXiv paper (Sep. 12, 2025)
 - ✅ Publish model checkpoints
-- ⏳ Release evaluation scripts
-- ⏳ Release training code and data
-- ⏳ Release environment server code
+- ✅ Release evaluation scripts
+- ✅ Release training code and data
+- ✅ Release environment server code
 
 ##  Quick Start
 ActiveVLN separates the training code from the VLN-CE environment code to improve efficiency and resource usage. The training machine and the VLN-CE environment server communicate via HTTP. Therefore, you'll need to set up two separate environments: one for running the training code and another for the environment server. If resources (memory, GPU memory) allow, you can run both parts on the same machine.
@@ -46,7 +46,7 @@ mkdir nav_ws
 cd nav_ws
 
 # Install habitat-sim v0.1.7 (building from source)
-git clone --branch v0.1.7 git@github.com:facebookresearch/habitat-sim.git
+git clone --branch v0.1.7 https://github.com/facebookresearch/habitat-sim.git
 cd habitat-sim
 pip install -r requirements.txt
 python setup.py install --headless
@@ -59,7 +59,7 @@ python examples/examples.py
 
 # Install habitat-lab v0.1.7 (building from source)
 cd ..
-git clone --branch v0.1.7 git@github.com:facebookresearch/habitat-lab.git
+git clone --branch v0.1.7 https://github.com/facebookresearch/habitat-lab.git
 cd habitat-lab
 pip install -r requirements.txt
 pip install -r habitat_baselines/rl/requirements.txt
