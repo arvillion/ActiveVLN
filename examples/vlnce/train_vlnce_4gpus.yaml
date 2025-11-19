@@ -1,0 +1,120 @@
+hydra:
+  searchpath:
+    - file://verl/trainer/config
+
+defaults:
+  - ppo_trainer
+  - _self_
+
+debug: false
+vs_debug: false
+
+data:
+  train_batch_size: 8
+  val_batch_size: 32
+  max_prompt_length: 1024
+  max_response_length: 25480
+  shuffle: false
+  truncation: error
+  return_raw_chat: true
+  filter_overlong_prompts: true
+
+algorithm:
+  adv_estimator: grpo
+  kl_ctrl:
+    kl_coef: 0.0
+
+actor_rollout_ref:
+  model:
+    use_remove_padding: true
+    use_liger: false
+    use_fused_kernels: true
+  actor:
+    optim:
+      lr: 1e-6
+    ppo_mini_batch_size: 8
+    ppo_micro_batch_size_per_gpu: 2
+    use_kl_loss: false
+    kl_loss_coef: 0.0
+    kl_loss_type: low_var_kl
+    clip_ratio_low: 0.2
+    clip_ratio_high: 0.28
+    entropy_coeff: 0.0
+    ulysses_sequence_parallel_size: 1
+    strategy: fsdp2
+    checkpoint:
+      save_contents: ['model', 'optimizer', 'extra', 'hf_model']
+    fsdp_config:
+      param_offload: true
+      optimizer_offload: true
+  rollout:
+    log_prob_micro_batch_size_per_gpu: 8
+    tensor_model_parallel_size: 1
+    name: vllm
+    disable_log_stats: false
+    n: 4
+    temperature: 1.2
+    max_num_batched_tokens: 32768
+    gpu_memory_utilization: 0.6
+    enforce_eager: false
+    free_cache_engine: true
+    enable_chunked_prefill: false
+    val_kwargs:
+      top_p: 0.95
+      temperature: 0.2
+    agent:
+      activate_agent: true
+      single_response_max_tokens: 512
+      tool_name_key: env_name
+      custom_stop: []
+      show_tqdm: true
+      vl_model_path: ${actor_rollout_ref.model.path}
+
+      base_url: "http://127.0.0.1:5001"
+      timeout: 180
+      max_pixels: 76800
+      min_pixels: 1024
+      save_as_video: false
+      unmask_gt_actions: false
+      enable_fallback: false
+      max_vllm_images: 200
+      max_vllm_videos: 0
+      max_turn_budget: 40
+      max_step_budget: 120 # <= max_turn_budget * max_actions_per_step 
+      min_gen_actions: 2
+      gen_length_tolerance: 2.0
+      smooth_alpha: 2.0
+      max_actions_per_step: 3
+      action_sep: ","
+      prompt_format: no_think_no_tag
+      prob_from_scrath: 0.0
+      warmup_ratio: 0.0
+      enable_dynamic_sampling: false
+      max_sample_attempts: 2
+      random_drop: false
+      experiment_name: ${trainer.experiment_name}
+      reward:
+        reward_type: weighted_success_ndtw
+        success_reward_base: 10.0
+        ndtw_reward_base: 5.0
+  ref:
+    log_prob_micro_batch_size_per_gpu: 8
+    strategy: fsdp2
+    fsdp_config:
+      param_offload: true
+
+critic:
+  strategy: fsdp2
+
+reward_model:
+  strategy: fsdp2
+
+trainer:
+  critic_warmup: 0
+  logger: ['console', 'swanlab']
+  val_before_train: false
+  n_gpus_per_node: 4
+  nnodes: 1
+  save_freq: 50
+  test_freq: 10000000
+  total_epochs: 1
